@@ -211,7 +211,7 @@ func parseContextLine(hunk *Hunk, line string) error {
 
 func parseMetadata(currentFile *FileDiff, line string) error {
 	parts := strings.Fields(line) // ["index","abc123..def456","100644"]
-	if len(parts) != 3 {
+	if len(parts) < 2 {
 		return fmt.Errorf("invalid metadata format: %s", line)
 	}
 	hashes := strings.SplitN(parts[1], "..", 2)
@@ -219,7 +219,9 @@ func parseMetadata(currentFile *FileDiff, line string) error {
 		return fmt.Errorf("invalid hash format: %s", line)
 	}
 	currentFile.OldHash, currentFile.NewHash = strings.TrimSpace(hashes[0]), strings.TrimSpace(hashes[1])
-	currentFile.NewMode = strings.TrimSpace(parts[2])
+	if len(parts) > 2 {
+		currentFile.NewMode = strings.TrimSpace(parts[2])
+	}
 	return nil
 }
 
