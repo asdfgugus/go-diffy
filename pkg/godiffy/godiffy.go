@@ -10,86 +10,104 @@ func Parse(input string) (*Diff, error) {
 	resultDiff := &Diff{}
 	var currentFile *FileDiff
 	var currentHunk *Hunk
+	isHeader := true
+	isHunk := false
 
 	for line := range strings.Lines(input) {
 		if currentFile == nil && !strings.HasPrefix(line, "diff --git") {
 			continue
 		}
-		switch {
-		case strings.HasPrefix(line, "di"): // diff --git a/foo.txt b/foo.txt
+		if strings.HasPrefix(line, "di") { // diff --git a/foo.txt b/foo.txt
 			currentFile = parseNewFileDiff(resultDiff, line)
-		case strings.HasPrefix(line, "i"): // index abc123..def456 100644
-			err := parseMetadata(currentFile, line)
-			if err != nil {
-				return nil, err
-			}
-		case strings.HasPrefix(line, "--"): // --- a/foo.txt
-			err := parseOldFilenameMarker(currentFile, line)
-			if err != nil {
-				return nil, err
-			}
-		case strings.HasPrefix(line, "++"): // +++ b/foo.txt
-			err := parseNewFilenameMarker(currentFile, line)
-			if err != nil {
-				return nil, err
-			}
-		case strings.HasPrefix(line, "@"): // @@ -1,3 +1,4 @@
+			isHeader = true
+			isHunk = false
+			continue
+		}
+		if strings.HasPrefix(line, "@") {
 			var err error
 			currentHunk, err = parseHunk(currentFile, line)
 			if err != nil {
 				return nil, err
 			}
-		case strings.HasPrefix(line, "+"): // +added line
-			err := parseAddLine(currentHunk, line)
-			if err != nil {
-				return nil, err
-			}
-		case strings.HasPrefix(line, "-"): // -removed line
-			err := parseDeleteLine(currentHunk, line)
-			if err != nil {
-				return nil, err
-			}
-		case strings.HasPrefix(line, " "): //  context line
-			err := parseContextLine(currentHunk, line)
-			if err != nil {
-				return nil, err
-			}
-		case strings.HasPrefix(line, "new f"): // new file mode 100644
-			err := parseNewFileMode(currentFile, line)
-			if err != nil {
-				return nil, err
-			}
-		case strings.HasPrefix(line, "de"): // deleted file mode 100644
-			err := parseDeletedFileMode(currentFile, line)
-			if err != nil {
-				return nil, err
-			}
-		case strings.HasPrefix(line, "r"): // rename from old_name.txt / rename to new_name.txt
-			if strings.HasPrefix(line, "rename f") {
-				err := parseRenameFrom(currentFile, line)
-				if err != nil {
-					return nil, err
-				}
-			} else {
-				err := parseRenameTo(currentFile, line)
-				if err != nil {
-					return nil, err
-				}
-			}
-		case strings.HasPrefix(line, "o"): // old mode 100755
-			err := parseOldMode(currentFile, line)
-			if err != nil {
-				return nil, err
-			}
-		case strings.HasPrefix(line, "new m"): // new mode 100644
-			err := parseNewMode(currentFile, line)
-			if err != nil {
-				return nil, err
-			}
-		case strings.TrimSpace(line) == "": // (blank)
+			isHeader = false
+			isHunk = true
 			continue
-		default:
-			return nil, fmt.Errorf("failed to parse line: %s", line)
+		}
+
+		if isHeader {
+			switch {
+			case strings.HasPrefix(line, "i"): // index abc123..def456 100644
+				err := parseMetadata(currentFile, line)
+				if err != nil {
+					return nil, err
+				}
+			case strings.HasPrefix(line, "--- "): // --- a/foo.txt
+				err := parseOldFilenameMarker(currentFile, line)
+				if err != nil {
+					return nil, err
+				}
+			case strings.HasPrefix(line, "+++ "): // +++ b/foo.txt
+				err := parseNewFilenameMarker(currentFile, line)
+				if err != nil {
+					return nil, err
+				}
+			case strings.HasPrefix(line, "new f"): // new file mode 100644
+				err := parseNewFileMode(currentFile, line)
+				if err != nil {
+					return nil, err
+				}
+			case strings.HasPrefix(line, "de"): // deleted file mode 100644
+				err := parseDeletedFileMode(currentFile, line)
+				if err != nil {
+					return nil, err
+				}
+			case strings.HasPrefix(line, "r"): // rename from old_name.txt / rename to new_name.txt
+				if strings.HasPrefix(line, "rename f") {
+					err := parseRenameFrom(currentFile, line)
+					if err != nil {
+						return nil, err
+					}
+				} else {
+					err := parseRenameTo(currentFile, line)
+					if err != nil {
+						return nil, err
+					}
+				}
+			case strings.HasPrefix(line, "o"): // old mode 100755
+				err := parseOldMode(currentFile, line)
+				if err != nil {
+					return nil, err
+				}
+			case strings.HasPrefix(line, "new m"): // new mode 100644
+				err := parseNewMode(currentFile, line)
+				if err != nil {
+					return nil, err
+				}
+			default:
+				return nil, fmt.Errorf("failed to parse line: %s", line)
+			}
+		}
+
+		if isHunk {
+			switch {
+			case strings.HasPrefix(line, "+"): // +added line
+				err := parseAddLine(currentHunk, line)
+				if err != nil {
+					return nil, err
+				}
+			case strings.HasPrefix(line, "-"): // -removed line
+				err := parseDeleteLine(currentHunk, line)
+				if err != nil {
+					return nil, err
+				}
+			case strings.HasPrefix(line, " "): //  context line
+				err := parseContextLine(currentHunk, line)
+				if err != nil {
+					return nil, err
+				}
+			default:
+				return nil, fmt.Errorf("failed to parse line: %s", line)
+			}
 		}
 	}
 	return resultDiff, nil
