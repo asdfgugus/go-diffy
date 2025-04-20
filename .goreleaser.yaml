@@ -9,12 +9,7 @@
 version: 2
 
 builds:
-  - env:
-      - CGO_ENABLED=0
-    goos:
-      - linux
-      - windows
-      - darwin
+  - skip: true
 
 archives:
   - formats: [tar.gz]
