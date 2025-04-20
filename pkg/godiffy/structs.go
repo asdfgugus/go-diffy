@@ -8,10 +8,6 @@ type FileStatus int
 
 type FileDiff struct {
 	Header          string
-	IsNew           bool
-	IsDeleted       bool
-	IsRename        bool
-	IsCopy          bool
 	OldHash         string
 	NewHash         string
 	SimilarityIndex string
@@ -22,19 +18,20 @@ type FileDiff struct {
 	OldMode         string
 	NewMode         string
 	Status          FileStatus
+	Hunks           []*Hunk
 }
 
 type Hunk struct {
-	OldStart int
-	NewStart int
-	OldLines int
-	NewLines int
-	Lines    []HunkLine
+	OldStart     int
+	NewStart     int
+	OldLineCount int
+	NewLineCount int
+	Lines        []HunkLine
 }
 
 type HunkLineKind int
 
 type HunkLine struct {
-	Type    HunkLineKind
-	Content string
+	Type HunkLineKind
+	Line string
 }

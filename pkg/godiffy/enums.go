@@ -1,7 +1,7 @@
 package godiffy
 
 const (
-	FileStatusAdded FileStatus = iota
+	FileStatusNew FileStatus = iota
 	FileStatusDeleted
 	FileStatusModified
 	FileStatusRenamed
@@ -10,7 +10,7 @@ const (
 )
 
 const (
-	LineAdded HunkLineKind = iota
-	LineDeleted
-	LineContext
+	HunkLineAdded HunkLineKind = iota
+	HunkLineDeleted
+	HunkLineContext
 )
