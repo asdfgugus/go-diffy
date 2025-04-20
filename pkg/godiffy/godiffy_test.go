@@ -53,10 +53,10 @@ index abc123..def456 100644
 	}
 
 	expectedLines := []HunkLine{
-		{Type: HunkLineContext, Line: " line1"},
-		{Type: HunkLineDeleted, Line: "-line2"},
-		{Type: HunkLineAdded, Line: "+new2"},
-		{Type: HunkLineContext, Line: " line3"},
+		{Type: HunkLineContext, Content: "line1\n"},
+		{Type: HunkLineDeleted, Content: "line2\n"},
+		{Type: HunkLineAdded, Content: "new2\n"},
+		{Type: HunkLineContext, Content: "line3\n"},
 	}
 	if !reflect.DeepEqual(h.Lines, expectedLines) {
 		t.Errorf("h.Lines = %+v, want %+v", h.Lines, expectedLines)

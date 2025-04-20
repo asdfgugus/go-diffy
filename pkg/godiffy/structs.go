@@ -32,6 +32,6 @@ type Hunk struct {
 type HunkLineKind int
 
 type HunkLine struct {
-	Type HunkLineKind
-	Line string
+	Type    HunkLineKind
+	Content string
 }

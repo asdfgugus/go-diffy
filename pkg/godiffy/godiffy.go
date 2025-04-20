@@ -160,8 +160,8 @@ func parseAddLine(hunk *Hunk, line string) error {
 		return fmt.Errorf("failed to parse add line: hunk is nil")
 	}
 	hunkLine := HunkLine{
-		Type: HunkLineAdded,
-		Line: strings.TrimSuffix(line, "\n"),
+		Type:    HunkLineAdded,
+		Content: strings.TrimPrefix(line, "+"),
 	}
 	hunk.Lines = append(hunk.Lines, hunkLine)
 	return nil
@@ -172,8 +172,8 @@ func parseDeleteLine(hunk *Hunk, line string) error {
 		return fmt.Errorf("failed to parse delete line: hunk is nil")
 	}
 	hunkLine := HunkLine{
-		Type: HunkLineDeleted,
-		Line: strings.TrimSuffix(line, "\n"),
+		Type:    HunkLineDeleted,
+		Content: strings.TrimPrefix(line, "-"),
 	}
 	hunk.Lines = append(hunk.Lines, hunkLine)
 	return nil
@@ -184,8 +184,8 @@ func parseContextLine(hunk *Hunk, line string) error {
 		return fmt.Errorf("failed to parse context line: hunk is nil")
 	}
 	hunkLine := HunkLine{
-		Type: HunkLineContext,
-		Line: strings.TrimSuffix(line, "\n"),
+		Type:    HunkLineContext,
+		Content: strings.TrimPrefix(line, " "),
 	}
 	hunk.Lines = append(hunk.Lines, hunkLine)
 	return nil
