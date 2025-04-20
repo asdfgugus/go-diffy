@@ -108,7 +108,7 @@ func parseHunk(currentFile *FileDiff, line string) (*Hunk, error) {
 	var err error
 	hunk := &Hunk{}
 	parts := strings.Fields(line) // ["@@","-1,3","+1,4","@@"]
-	if len(parts) != 4 {
+	if len(parts) < 4 {
 		return nil, fmt.Errorf("invalid hunk format: %s", line)
 	}
 	oldParts := strings.Split(parts[1], ",") // ["-1","3"]
