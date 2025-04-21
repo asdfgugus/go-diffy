@@ -14,7 +14,7 @@ import (
 //
 
 func TestMergeToPath_ReadDirError(t *testing.T) {
-	err := MergeToPath(godiffy.Diff{}, "/path/does/not/exist")
+	err := MergeToPath(&godiffy.Diff{}, "/path/does/not/exist")
 	if err == nil {
 		t.Fatal("expected error for unreadable directory, got nil")
 	}
@@ -35,7 +35,7 @@ func TestMergeToPath_DeleteAndSkip(t *testing.T) {
 		{Status: godiffy.FileStatusDeleted, NewPath: "noexist.txt"},
 	}}
 
-	if err := MergeToPath(diff, dir); err != nil {
+	if err := MergeToPath(&diff, dir); err != nil {
 		t.Fatalf("expected no error deleting existing & skipping non‑existent, got %v", err)
 	}
 	if _, err := os.Stat(toDelete); !os.IsNotExist(err) {
@@ -62,7 +62,7 @@ func TestMergeToPath_NewFile_WrapError(t *testing.T) {
 		},
 	}}
 
-	err := MergeToPath(diff, dir)
+	err := MergeToPath(&diff, dir)
 	if err == nil {
 		t.Fatal("expected mkdir error wrapped, got nil")
 	}
@@ -85,7 +85,7 @@ func TestMergeToPath_NewFile_InvalidModeWrap(t *testing.T) {
 		},
 	}}
 
-	err := MergeToPath(diff, dir)
+	err := MergeToPath(&diff, dir)
 	if err == nil {
 		t.Fatal("expected mode‑parse error wrapped, got nil")
 	}
@@ -114,7 +114,7 @@ func TestMergeToPath_ModifyFile_Success(t *testing.T) {
 		},
 	}}
 
-	if err := MergeToPath(diff, dir); err != nil {
+	if err := MergeToPath(&diff, dir); err != nil {
 		t.Fatalf("expected success, got %v", err)
 	}
 
@@ -146,7 +146,7 @@ func TestMergeToPath_ModifyFile_InvalidModeWrap(t *testing.T) {
 		},
 	}}
 
-	err := MergeToPath(diff, dir)
+	err := MergeToPath(&diff, dir)
 	if err == nil {
 		t.Fatal("expected mode‑parse error wrapped, got nil")
 	}
@@ -175,7 +175,7 @@ func TestMergeToPath_ModifyFile_MkdirErrorWrap(t *testing.T) {
 		},
 	}}
 
-	err := MergeToPath(diff, dir)
+	err := MergeToPath(&diff, dir)
 	if err == nil {
 		t.Fatal("expected mkdir error wrapped, got nil")
 	}
@@ -189,7 +189,7 @@ func TestMergeToPath_ModifyFile_MkdirErrorWrap(t *testing.T) {
 
 func TestMergeToPath_EmptyDiff(t *testing.T) {
 	dir := t.TempDir()
-	if err := MergeToPath(godiffy.Diff{Files: nil}, dir); err != nil {
+	if err := MergeToPath(&godiffy.Diff{Files: nil}, dir); err != nil {
 		t.Errorf("empty diff should succeed, got %v", err)
 	}
 }

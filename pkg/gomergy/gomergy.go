@@ -9,7 +9,7 @@ import (
 	"github.com/asdfgugus/godiffy/pkg/godiffy"
 )
 
-func MergeToPath(diff godiffy.Diff, path string) error {
+func MergeToPath(diff *godiffy.Diff, path string) error {
 	if _, err := os.ReadDir(path); err != nil {
 		return fmt.Errorf("failed to read directory %s: %w", path, err)
 	}
