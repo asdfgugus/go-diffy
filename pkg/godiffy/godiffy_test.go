@@ -52,7 +52,7 @@ index abc123..def456 100644
 		t.Errorf("expected NewLineCount 4, got %d", h.NewLineCount)
 	}
 
-	expectedLines := []HunkLine{
+	expectedLines := []*HunkLine{
 		{Type: HunkLineContext, Content: "line1\n"},
 		{Type: HunkLineDeleted, Content: "line2\n"},
 		{Type: HunkLineAdded, Content: "new2\n"},

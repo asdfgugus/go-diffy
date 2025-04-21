@@ -57,7 +57,7 @@ func TestMergeToPath_NewFile_WrapError(t *testing.T) {
 			NewPath: "conflict/bar.txt",
 			NewMode: "0644",
 			Hunks: []*godiffy.Hunk{
-				{Lines: []godiffy.HunkLine{{Content: "x"}}},
+				{Lines: []*godiffy.HunkLine{{Content: "x"}}},
 			},
 		},
 	}}
@@ -105,7 +105,7 @@ func TestMergeToPath_ModifyFile_Success(t *testing.T) {
 			NewPath: "a/m.txt",
 			NewMode: "0600",
 			Hunks: []*godiffy.Hunk{
-				{Lines: []godiffy.HunkLine{
+				{Lines: []*godiffy.HunkLine{
 					{Type: godiffy.HunkLineDeleted, Content: "old\n"},
 					{Type: godiffy.HunkLineContext, Content: "keep\n"},
 					{Type: godiffy.HunkLineAdded, Content: "new\n"},
@@ -170,7 +170,7 @@ func TestMergeToPath_ModifyFile_MkdirErrorWrap(t *testing.T) {
 			NewPath: "foo/bar.txt",
 			NewMode: "0644",
 			Hunks: []*godiffy.Hunk{
-				{Lines: []godiffy.HunkLine{{Type: godiffy.HunkLineAdded, Content: "x"}}},
+				{Lines: []*godiffy.HunkLine{{Type: godiffy.HunkLineAdded, Content: "x"}}},
 			},
 		},
 	}}
@@ -226,7 +226,7 @@ func TestHandleNewFile_SuccessAndInvalidMode(t *testing.T) {
 		NewPath: "sub/z.txt",
 		NewMode: "0644",
 		Hunks: []*godiffy.Hunk{
-			{Lines: []godiffy.HunkLine{{Content: "hey"}}},
+			{Lines: []*godiffy.HunkLine{{Content: "hey"}}},
 		},
 	}
 
@@ -265,7 +265,7 @@ func TestHandleModifiedFile_SuccessAndInvalidMode(t *testing.T) {
 		NewPath: "q.txt",
 		NewMode: "0600",
 		Hunks: []*godiffy.Hunk{
-			{Lines: []godiffy.HunkLine{
+			{Lines: []*godiffy.HunkLine{
 				{Type: godiffy.HunkLineDeleted, Content: "d"},
 				{Type: godiffy.HunkLineContext, Content: "c"},
 				{Type: godiffy.HunkLineAdded, Content: "a"},

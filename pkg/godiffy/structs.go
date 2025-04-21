@@ -26,7 +26,7 @@ type Hunk struct {
 	NewStart     int
 	OldLineCount int
 	NewLineCount int
-	Lines        []HunkLine
+	Lines        []*HunkLine
 }
 
 type HunkLineKind int

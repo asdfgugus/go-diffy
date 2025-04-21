@@ -177,7 +177,7 @@ func parseAddLine(hunk *Hunk, line string) error {
 	if hunk == nil {
 		return fmt.Errorf("failed to parse add line: hunk is nil")
 	}
-	hunkLine := HunkLine{
+	hunkLine := &HunkLine{
 		Type:    HunkLineAdded,
 		Content: strings.TrimPrefix(line, "+"),
 	}
@@ -189,7 +189,7 @@ func parseDeleteLine(hunk *Hunk, line string) error {
 	if hunk == nil {
 		return fmt.Errorf("failed to parse delete line: hunk is nil")
 	}
-	hunkLine := HunkLine{
+	hunkLine := &HunkLine{
 		Type:    HunkLineDeleted,
 		Content: strings.TrimPrefix(line, "-"),
 	}
@@ -201,7 +201,7 @@ func parseContextLine(hunk *Hunk, line string) error {
 	if hunk == nil {
 		return fmt.Errorf("failed to parse context line: hunk is nil")
 	}
-	hunkLine := HunkLine{
+	hunkLine := &HunkLine{
 		Type:    HunkLineContext,
 		Content: strings.TrimPrefix(line, " "),
 	}
